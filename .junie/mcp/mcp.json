@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/Applications/MAMP/bin/php/php8.2.20/bin/php",
+            "args": [
+                "/Applications/MAMP/htdocs/LEARN/LARAVEL/react_mas_filament/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}
