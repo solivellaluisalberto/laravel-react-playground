@@ -19,6 +19,14 @@
             })();
         </script>
 
+        {{-- Inline script to set locale immediately to prevent flash of default language --}}
+        <script>
+            (function() {
+                // Establecer el locale desde el servidor para evitar el flash
+                window.__INITIAL_LOCALE__ = '{{ app()->getLocale() }}';
+            })();
+        </script>
+
         {{-- Inline style to set the HTML background color based on our theme in app.css --}}
         <style>
             html {
