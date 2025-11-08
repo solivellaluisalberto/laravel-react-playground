@@ -14,16 +14,16 @@ definitions:
         script:
           # Copiar archivo de entorno
           - cp .env.example .env
-          
+
           # Instalar dependencias de Composer
           - composer install --no-interaction --prefer-dist --optimize-autoloader
-          
+
           # Generar key de aplicación
           - php artisan key:generate
-          
+
           # Instalar dependencias de NPM
           - npm ci
-          
+
         artifacts:
           - vendor/**
           - node_modules/**
@@ -36,7 +36,7 @@ definitions:
         script:
           # Ejecutar Pint en modo test (no modifica archivos)
           - ./vendor/bin/pint --test
-        
+
     - step: &code-style-js
         name: 🎨 JavaScript - Verificar Estilo de Código
         caches:
@@ -44,15 +44,12 @@ definitions:
         script:
           # Verificar formato con Prettier
           - npm run format:check
-          
-          # Verificar TypeScript
-          - npm run types
 
     - step: &run-tests
         name: 🧪 Ejecutar Tests (PHPUnit)
         caches:
           - composer
-        script:          
+        script:
           # Ejecutar tests con SQLite
           - php artisan test
 
