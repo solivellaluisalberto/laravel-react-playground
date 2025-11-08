@@ -3,7 +3,6 @@
 namespace App\Filament\Pages\Tenancy;
 
 use App\Models\Course;
-use App\Models\Team;
 use Filament\Forms\Components\TextInput;
 use Filament\Pages\Tenancy\RegisterTenant;
 use Filament\Schemas\Schema;
@@ -20,7 +19,7 @@ class RegisterTeam extends RegisterTenant
         return $schema
             ->components([
                 TextInput::make('name'),
-                TextInput::make('slug')
+                TextInput::make('slug'),
             ]);
     }
 

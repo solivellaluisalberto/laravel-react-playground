@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
-            'redirects_admin' => RedirectsToFilamentWhenAdmin::class
+            'redirects_admin' => RedirectsToFilamentWhenAdmin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

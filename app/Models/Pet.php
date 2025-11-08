@@ -14,5 +14,4 @@ class Pet extends Model
         'gender',
         'birthday',
     ];
-
 }

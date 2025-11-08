@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Activity extends Model
 {
     protected $table = 'activities';
+
     protected $fillable = ['name', 'course_id'];
 
-    public function course(): BelongsTo {
+    public function course(): BelongsTo
+    {
         return $this->belongsTo(Course::class);
     }
 }

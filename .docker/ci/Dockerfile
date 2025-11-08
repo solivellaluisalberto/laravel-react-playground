@@ -6,12 +6,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev libjpeg-dev libfreetype6-dev \
     libonig-dev libxml2-dev libzip-dev \
     sqlite3 libsqlite3-dev \
+    libicu-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones PHP base (estas raramente cambian)
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) \
-    gd mbstring pdo pdo_mysql pdo_sqlite zip bcmath exif pcntl xml dom
+    gd mbstring pdo pdo_mysql pdo_sqlite zip bcmath exif pcntl xml dom intl
 
 # Instalar Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer

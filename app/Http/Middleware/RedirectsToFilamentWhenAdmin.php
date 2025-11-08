@@ -19,6 +19,7 @@ class RedirectsToFilamentWhenAdmin
         if (auth()->user()->hasRole('admin')) {
             return Inertia::location(url('/admin'));
         }
+
         return $next($request);
     }
 }

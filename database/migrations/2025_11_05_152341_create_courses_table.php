@@ -18,13 +18,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-
         Schema::create('activities', function (Blueprint $table) {
-           $table->id();
-           $table->foreignId('course_id')->references('id')->on('courses');
-           $table->string('name');
-           $table->unique(['course_id', 'slug']);
-           $table->timestamps();
+            $table->id();
+            $table->foreignId('course_id')->references('id')->on('courses');
+            $table->string('name');
+            $table->unique(['course_id', 'slug']);
+            $table->timestamps();
         });
     }
 
