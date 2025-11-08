@@ -1,0 +1,125 @@
+image: alberto1199/php83-cli-node24:latest
+
+definitions:
+  caches:
+    composer-vendor: vendor
+    npm-node-modules: node_modules
+
+  steps:
+    - step: &install-dependencies
+        name: 📦 Instalar Dependencias
+        caches:
+          - composer-vendor
+          - npm-node-modules
+        script:
+          # Copiar archivo de entorno
+          - cp .env.example .env
+          
+          # Instalar dependencias de Composer
+          - composer install --no-interaction --prefer-dist --optimize-autoloader
+          
+          # Generar key de aplicación
+          - php artisan key:generate
+          
+          # Instalar dependencias de NPM
+          - npm ci
+          
+        artifacts:
+          - vendor/**
+          - node_modules/**
+          - .env
+
+    - step: &code-style-php
+        name: 🎨 PHP - Verificar Estilo de Código (Pint)
+        caches:
+          - composer-vendor
+        script:
+          # Ejecutar Pint en modo test (no modifica archivos)
+          - ./vendor/bin/pint --test
+        
+    - step: &code-style-js
+        name: 🎨 JavaScript - Verificar Estilo de Código
+        caches:
+          - npm-node-modules
+        script:
+          # Verificar formato con Prettier
+          - npm run format:check
+          
+          # Verificar TypeScript
+          - npm run types
+
+    - step: &run-tests
+        name: 🧪 Ejecutar Tests (PHPUnit)
+        caches:
+          - composer-vendor
+        services:
+          - mysql
+        script:          
+          # Ejecutar tests
+          - php artisan test
+
+    - step: &build-assets
+        name: 🏗️ Compilar Assets Frontend
+        caches:
+          - npm-node-modules
+        script:
+          # Compilar assets de producción
+          - npm run build
+        artifacts:
+          - public/build/**
+
+pipelines:
+  default:
+    - step: *install-dependencies
+    - parallel:
+        - step: *code-style-php
+        - step: *code-style-js
+    - step: *run-tests
+    - step: *build-assets
+
+  branches:
+    main:
+      - step: *install-dependencies
+      - parallel:
+          - step: *code-style-php
+          - step: *code-style-js
+      - step: *run-tests
+      - step: *build-assets
+      - step:
+          name: 🚀 Deploy a Producción
+          deployment: production
+          script:
+            - echo "Aquí irían los comandos de deploy"
+            # - ssh user@server 'cd /var/www && git pull && composer install --no-dev && php artisan migrate --force && npm run build'
+
+    develop:
+      - step: *install-dependencies
+      - parallel:
+          - step: *code-style-php
+          - step: *code-style-js
+      - step: *run-tests
+      - step: *build-assets
+      - step:
+          name: 🔧 Deploy a Staging
+          deployment: staging
+          script:
+            - echo "Aquí irían los comandos de deploy a staging"
+
+  pull-requests:
+    '**':
+      - step: *install-dependencies
+      - parallel:
+          - step: *code-style-php
+          - step: *code-style-js
+      - step: *run-tests
+
+definitions:
+  services:
+    mysql:
+      image: mysql:8.0
+      environment:
+        MYSQL_DATABASE: test_db
+        MYSQL_ROOT_PASSWORD: root_password
+        MYSQL_USER: test_user
+        MYSQL_PASSWORD: test_password
+
