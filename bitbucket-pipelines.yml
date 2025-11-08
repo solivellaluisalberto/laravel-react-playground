@@ -1,4 +1,4 @@
-image: alberto1199/php83-cli-node24:latest
+image: alberto1199/php83-cli-node24
 
 definitions:
   caches:
