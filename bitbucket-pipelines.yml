@@ -2,15 +2,15 @@ image: alberto1199/php83-cli-node24:latest
 
 definitions:
   caches:
-    composer-vendor: vendor
-    npm-node-modules: node_modules
+    composer: vendor
+    node: node_modules
 
   steps:
     - step: &install-dependencies
         name: 📦 Instalar Dependencias
         caches:
-          - composer-vendor
-          - npm-node-modules
+          - composer
+          - node
         script:
           # Copiar archivo de entorno
           - cp .env.example .env
@@ -32,7 +32,7 @@ definitions:
     - step: &code-style-php
         name: 🎨 PHP - Verificar Estilo de Código (Pint)
         caches:
-          - composer-vendor
+          - composer
         script:
           # Ejecutar Pint en modo test (no modifica archivos)
           - ./vendor/bin/pint --test
@@ -40,7 +40,7 @@ definitions:
     - step: &code-style-js
         name: 🎨 JavaScript - Verificar Estilo de Código
         caches:
-          - npm-node-modules
+          - node
         script:
           # Verificar formato con Prettier
           - npm run format:check
@@ -51,17 +51,15 @@ definitions:
     - step: &run-tests
         name: 🧪 Ejecutar Tests (PHPUnit)
         caches:
-          - composer-vendor
-        services:
-          - mysql
+          - composer
         script:          
-          # Ejecutar tests
+          # Ejecutar tests con SQLite
           - php artisan test
 
     - step: &build-assets
         name: 🏗️ Compilar Assets Frontend
         caches:
-          - npm-node-modules
+          - node
         script:
           # Compilar assets de producción
           - npm run build
@@ -112,14 +110,3 @@ pipelines:
           - step: *code-style-php
           - step: *code-style-js
       - step: *run-tests
-
-definitions:
-  services:
-    mysql:
-      image: mysql:8.0
-      environment:
-        MYSQL_DATABASE: test_db
-        MYSQL_ROOT_PASSWORD: root_password
-        MYSQL_USER: test_user
-        MYSQL_PASSWORD: test_password
-
