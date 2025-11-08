@@ -69,8 +69,9 @@ pipelines:
     - parallel:
         - step: *code-style-php
         - step: *code-style-js
-    - step: *run-tests
     - step: *build-assets
+    - step: *run-tests
+
 
   branches:
     main:
@@ -78,8 +79,8 @@ pipelines:
       - parallel:
           - step: *code-style-php
           - step: *code-style-js
-      - step: *run-tests
       - step: *build-assets
+      - step: *run-tests
       - step:
           name: 🚀 Deploy a Producción
           deployment: production
@@ -92,8 +93,8 @@ pipelines:
       - parallel:
           - step: *code-style-php
           - step: *code-style-js
-      - step: *run-tests
       - step: *build-assets
+      - step: *run-tests
       - step:
           name: 🔧 Deploy a Staging
           deployment: staging
